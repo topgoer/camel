@@ -1,0 +1,52 @@
+[tool.poetry]
+name = "versemind-rag-backend"
+version = "0.1.0"
+description = "Backend services for VerseMind-RAG"
+authors = ["Your Name <you@example.com>"]
+license = "MIT"
+package-mode = false  # disable packaging, only manage dependencies
+
+[tool.poetry.dependencies]
+python = ">=3.12,<3.13"
+fastapi = "0.115.12"  # Revert to original version
+uvicorn = "0.34.0"
+python-multipart = "0.0.20"
+pydantic = "2.11.3"
+pymupdf = "1.24.0"
+python-docx = "1.1.0"
+langchain = "*"
+# chromadb and chroma-hnswlib removed due to Windows build issues; install via pip/conda when needed
+ollama = "0.1.6"
+openai = "1.12.0"
+requests = "2.31.0"
+numpy = "1.26.0"
+pandas = "2.2.2"
+toml = "0.10.2"
+# pdfplumber = "*"
+pillow_heif = "*"
+matplotlib = "*"
+torchaudio = "*"
+pdf2image = "*"
+"pdfminer.six" = "20201018"
+pycryptodome = "*"
+pypdf = "*"  # Ensure pypdf is included for PDF processing
+pymilvus = "^2.3.0"  # Milvus Python client
+grpcio = "^1.54.0"  # gRPC runtime for Milvus client
+protobuf = "*"  # Protocol buffers support
+cloudpickle = ">=2.2.1"  # Required by sagemaker
+docker = "*"  # Required by sagemaker
+jsonschema = "*"  # Required by sagemaker
+attrs = "<24,>=23.1.0"  # Resolve version conflict for sagemaker
+importlib-metadata = "<7.0,>=1.4.0"  # Resolve version conflict for sagemaker
+
+[tool.poetry.group.dev.dependencies]
+pytest = "8.3.5"
+pytest-asyncio = "*"  # Required for handling async tests
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+asyncio_mode = "strict"
+asyncio_default_fixture_loop_scope = "function"
