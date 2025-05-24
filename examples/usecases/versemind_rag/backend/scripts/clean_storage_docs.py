@@ -1,3 +1,6 @@
+# Copyright (c) 2025 VerseMind-RAG Contributors
+# Licensed under the MIT License
+
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
@@ -62,3 +65,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

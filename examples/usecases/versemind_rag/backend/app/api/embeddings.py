@@ -1,3 +1,6 @@
+# Copyright (c) 2025 VerseMind-RAG Contributors
+# Licensed under the MIT License
+
 from fastapi import APIRouter, HTTPException, Body, Depends, Query
 from typing import Dict, List, Any, Optional
 import os
@@ -14,8 +17,7 @@ async def create_embeddings(
     model: str = Body(...)
 ):
     """
-    将文本块转换为向量表示
-    """
+    将文本块转换为向量表�?    """
     try:
         result = embed_service.create_embeddings(document_id, provider, model)
         return result
@@ -29,8 +31,7 @@ async def create_embeddings(
 @router.get("/models")
 async def get_embedding_models():
     """
-    获取可用的嵌入模型列表
-    """
+    获取可用的嵌入模型列�?    """
     return embed_service.get_embedding_models()
 
 @router.get("/list")
@@ -47,8 +48,7 @@ async def list_embeddings(document_id: Optional[str] = Query(None, description="
 @router.delete("/{embedding_id}")
 async def delete_embedding(embedding_id: str):
     """
-    删除指定ID的嵌入向量
-    """
+    删除指定ID的嵌入向�?    """
     try:
         result = embed_service.delete_embedding(embedding_id)
         return result
@@ -56,3 +56,4 @@ async def delete_embedding(embedding_id: str):
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"删除嵌入失败: {str(e)}")
+

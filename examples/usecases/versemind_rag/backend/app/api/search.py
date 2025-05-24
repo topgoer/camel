@@ -1,3 +1,6 @@
+# Copyright (c) 2025 VerseMind-RAG Contributors
+# Licensed under the MIT License
+
 from fastapi import APIRouter, HTTPException, Body, Depends, Query
 from typing import Dict, List, Optional
 import os
@@ -16,12 +19,10 @@ async def search_endpoint(
     min_chars: int = Body(100)
 ):
     """
-    执行语义搜索（POST请求版本）- 支持索引ID或集合名称
-    
-    - index_id_or_collection: 索引ID或集合名称
-    - query: 查询文本
+    执行语义搜索（POST请求版本�? 支持索引ID或集合名�?    
+    - index_id_or_collection: 索引ID或集合名�?    - query: 查询文本
     - top_k: 返回结果数量
-    - similarity_threshold: 相似度阈值 (默认0.5)
+    - similarity_threshold: 相似度阈�?(默认0.5)
     - min_chars: 最小字符数 (默认100)
     """
     try:
@@ -42,12 +43,12 @@ async def search_with_index(
     min_chars: int = Body(100)
 ):
     """
-    执行语义搜索（带路径参数版本）- 支持索引ID
+    执行语义搜索（带路径参数版本�? 支持索引ID
     
     - index_id: 索引ID
     - query: 查询文本
     - top_k: 返回结果数量
-    - similarity_threshold: 相似度阈值 (默认0.5)
+    - similarity_threshold: 相似度阈�?(默认0.5)
     - min_chars: 最小字符数 (默认100)
     """
     try:
@@ -68,12 +69,12 @@ async def search_collection(
     min_chars: int = Body(100)
 ):
     """
-    执行集合语义搜索（带路径参数版本）- 明确指定集合名称
+    执行集合语义搜索（带路径参数版本�? 明确指定集合名称
     
     - collection_name: 集合名称
     - query: 查询文本
     - top_k: 返回结果数量
-    - similarity_threshold: 相似度阈值 (默认0.5)
+    - similarity_threshold: 相似度阈�?(默认0.5)
     - min_chars: 最小字符数 (默认100)
     """
     try:
@@ -90,8 +91,7 @@ async def debug_search(index_id: str):
     调试端点，输出索引和嵌入文件信息
     """
     try:
-        # 使用我们添加的调试函数
-        if hasattr(search_service, 'debug_dump_files'):
+        # 使用我们添加的调试函�?        if hasattr(search_service, 'debug_dump_files'):
             result = search_service.debug_dump_files(index_id)
             return result
         else:
@@ -101,3 +101,4 @@ async def debug_search(index_id: str):
             }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"调试失败: {str(e)}")
+

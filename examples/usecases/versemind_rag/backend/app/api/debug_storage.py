@@ -1,3 +1,6 @@
+# Copyright (c) 2025 VerseMind-RAG Contributors
+# Licensed under the MIT License
+
 from fastapi import APIRouter, HTTPException
 from typing import Dict, Any
 import os
@@ -9,13 +12,13 @@ search_service = SearchService()
 
 @router.get("/search-results/{filename}")
 async def get_search_results(filename: str) -> Dict[str, Any]:
-    """获取特定的搜索结果文件内容"""
+    """获取特定的搜索结果文件内�?""
     try:
         results_dir = search_service.results_dir
         search_file_path = os.path.join(results_dir, filename)
         
         if not os.path.exists(search_file_path):
-            raise HTTPException(status_code=404, detail=f"搜索结果文件不存在: {filename}")
+            raise HTTPException(status_code=404, detail=f"搜索结果文件不存�? {filename}")
             
         try:
             with open(search_file_path, 'r', encoding='utf-8') as f:
@@ -37,9 +40,9 @@ async def get_storage_info() -> Dict[str, Any]:
         indices_dir = search_service.indices_dir
         embeddings_dir = search_service.embeddings_dir
         results_dir = search_service.results_dir
-          # 获取默认相似度阈值设置
+          # 获取默认相似度阈值设�?
         default_similarity_threshold = 0.5  # 默认值设置为0.5，避免过于严格的匹配要求
-          # 尝试从最近的搜索结果中获取实际的相似度阈值
+          # 尝试从最近的搜索结果中获取实际的相似度阈�?
         recent_search_file = None
         if os.path.exists(results_dir):
             SEARCH_PREFIX = "search_"
@@ -56,22 +59,22 @@ async def get_storage_info() -> Dict[str, Any]:
                         if 'similarity_threshold' in search_data:
                             default_similarity_threshold = search_data['similarity_threshold']
                 except Exception as e:
-                    print(f"读取最近搜索结果文件失败: {e}")
+                    print(f"读取最近搜索结果文件失�? {e}")
         
         # 添加调试日志
         print(f"DEBUG: indices_dir: {indices_dir}")
         print(f"DEBUG: embeddings_dir: {embeddings_dir}")
         print(f"DEBUG: results_dir: {results_dir}")
         
-        # 获取向量数据库特定目录
+        # 获取向量数据库特定目�?
         vector_db_paths = {}
         
-        # FAISS 数据库路径
+        # FAISS 数据库路�?
         faiss_dir = os.path.join(indices_dir, "faiss")
         if os.path.exists(faiss_dir):
             vector_db_paths["FAISS"] = faiss_dir
         
-        # Chroma 数据库路径 
+        # Chroma 数据库路�?
         chroma_dir = os.path.join(indices_dir, "chroma")
         if os.path.exists(chroma_dir):
             vector_db_paths["Chroma"] = chroma_dir
@@ -92,7 +95,7 @@ async def get_storage_info() -> Dict[str, Any]:
         # 检查向量数据库目录是否存在
         print(f"DEBUG: 检查FAISS目录是否存在: {os.path.join(indices_dir, 'faiss')}, 结果: {os.path.exists(os.path.join(indices_dir, 'faiss'))}")
         print(f"DEBUG: 检查Chroma目录是否存在: {os.path.join(indices_dir, 'chroma')}, 结果: {os.path.exists(os.path.join(indices_dir, 'chroma'))}")
-        # 尝试列出向量数据库目录下的文件
+        # 尝试列出向量数据库目录下的文�?
         try:
             if os.path.exists(os.path.join(indices_dir, "faiss")):
                 print(f"DEBUG: FAISS目录内容: {os.listdir(os.path.join(indices_dir, 'faiss'))}")
@@ -107,7 +110,7 @@ async def get_storage_info() -> Dict[str, Any]:
             print(f"DEBUG: storage/vector_db目录存在: {vector_db_dir}")
             print(f"DEBUG: storage/vector_db目录内容: {os.listdir(vector_db_dir)}")
         else:
-            print(f"DEBUG: storage/vector_db目录不存在: {vector_db_dir}")
+            print(f"DEBUG: storage/vector_db目录不存�? {vector_db_dir}")
             
         result = {
             "indices_dir": indices_dir,
@@ -135,13 +138,13 @@ async def get_search_files_by_index(index_id: str = None):
         if not os.path.exists(results_dir):
             return []
         
-        # 获取所有搜索结果文件
+        # 获取所有搜索结果文�?
         all_search_files = [f for f in os.listdir(results_dir) 
                            if f.startswith(SEARCH_PREFIX) and f.endswith(JSON_EXT)]
         
-        # 如果没有指定index_id，返回所有搜索结果文件
+        # 如果没有指定index_id，返回所有搜索结果文�?
         if not index_id:
-            # 按时间戳排序（最新的在前）
+            # 按时间戳排序（最新的在前�?
             all_search_files.sort(reverse=True)
             return all_search_files[:20]  # 限制返回数量
         
@@ -157,10 +160,10 @@ async def get_search_files_by_index(index_id: str = None):
                         timestamp = data.get('timestamp', '')
                         matching_files.append((filename, timestamp))
             except Exception as e:
-                # 如果读取文件失败，跳过这个文件
+                # 如果读取文件失败，跳过这个文�?
                 continue
         
-        # 按时间戳排序（最新的在前）
+        # 按时间戳排序（最新的在前�?
         matching_files.sort(key=lambda x: x[1], reverse=True)
         
         # 只返回文件名列表
@@ -168,3 +171,4 @@ async def get_search_files_by_index(index_id: str = None):
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"获取搜索结果文件列表失败: {str(e)}")
+

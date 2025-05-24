@@ -1,3 +1,6 @@
+# Copyright (c) 2025 VerseMind-RAG Contributors
+# Licensed under the MIT License
+
 """
 This file contains the refactored _find_index_file and search functions with reduced cognitive complexity.
 """
@@ -11,7 +14,7 @@ from typing import Dict, List, Any, Optional, Tuple
 # Original cognitive complexity: 32, new target: 15 or less
 
 def _find_index_file_refactored(self, index_id: str) -> Optional[str]:
-    """查找指定ID的索引文件"""
+    """查找指定ID的索引文�?""
     self.logger.debug(f"Searching for index file with index_id='{index_id}'")
     
     # 获取搜索目录
@@ -25,7 +28,7 @@ def _find_index_file_refactored(self, index_id: str) -> Optional[str]:
             self.logger.debug(f"Directory '{dir_path}' does not exist")
             continue
             
-        # 在目录中搜索匹配的索引文件
+        # 在目录中搜索匹配的索引文�?
         matching_file = self._find_matching_index_in_directory(dir_path, index_id)
         if matching_file:
             return matching_file
@@ -33,13 +36,13 @@ def _find_index_file_refactored(self, index_id: str) -> Optional[str]:
     return None
     
 def _get_search_directories(self) -> List[str]:
-    """获取索引文件的搜索目录列表"""
+    """获取索引文件的搜索目录列�?""
     from app.core.config import settings
     vector_db_dir = settings.VECTOR_STORE_PERSIST_DIR if hasattr(settings, 'VECTOR_STORE_PERSIST_DIR') else os.path.join(self.storage_dir, "storage", "vector_db")
     return [self.indices_dir, vector_db_dir]
     
 def _find_matching_index_in_directory(self, dir_path: str, index_id: str) -> Optional[str]:
-    """在指定目录中查找匹配的索引文件"""
+    """在指定目录中查找匹配的索引文�?""
     for filename in os.listdir(dir_path):
         if not filename.endswith(".json"):
             continue
@@ -93,21 +96,21 @@ def search_refactored(self, index_id_or_collection: str, query: str, top_k: int 
     执行语义搜索，支持单个索引或整个集合
     
     参数:
-        index_id_or_collection: 索引ID或集合名称
+        index_id_or_collection: 索引ID或集合名�?
         query: 查询文本
         top_k: 返回结果数量
-        similarity_threshold: 相似度阈值 (降低为0.5以提高召回率)
+        similarity_threshold: 相似度阈�?(降低�?.5以提高召回率)
         min_chars: 最小字符数
     
     返回:
-        包含搜索结果的字典
+        包含搜索结果的字�?
     """
     self.logger.debug(f"Starting search with index_id_or_collection={index_id_or_collection}, query={query}, top_k={top_k}, similarity_threshold={similarity_threshold}")
     
     original_id_or_collection = index_id_or_collection
     start_time = datetime.datetime.now()
     
-    # 初始化搜索环境
+    # 初始化搜索环�?
     search_info = self._initialize_search_info(
         index_id_or_collection, query, top_k, similarity_threshold, min_chars
     )
@@ -118,7 +121,7 @@ def search_refactored(self, index_id_or_collection: str, query: str, top_k: int 
         top_k, similarity_threshold, min_chars, search_info
     )
     
-    # 处理文档元数据
+    # 处理文档元数�?
     document_filename, document_id = self._process_document_metadata(
         search_info, search_results
     )
@@ -128,7 +131,7 @@ def search_refactored(self, index_id_or_collection: str, query: str, top_k: int 
     total_time = datetime.datetime.now() - start_time
     search_info["timing"]["total"] = total_time.total_seconds()
     
-    # 构建最终结果对象 
+    # 构建最终结果对�?
     collection_display_name = self._generate_collection_display_name(
         collection_info, original_id_or_collection
     )
@@ -140,7 +143,7 @@ def search_refactored(self, index_id_or_collection: str, query: str, top_k: int 
         min_chars, search_results, search_info
     )
     
-    # 保存结果并记录日志
+    # 保存结果并记录日�?
     self._save_and_log_results(result, search_results)
     
     return result
@@ -152,7 +155,7 @@ def _execute_search_process(self, index_id_or_collection: str, original_id_or_co
     # 查找索引文件
     index_files = self._find_and_validate_index_files(index_id_or_collection, search_info)
     
-    # 初始化集合信息
+    # 初始化集合信�?
     collection_info = self._initialize_collection_info(original_id_or_collection)
     
     # 准备索引数据
@@ -191,13 +194,13 @@ def _execute_vector_search(self, query_vector: List[float], index_files: List[st
     search_start_time = datetime.datetime.now()
     self.logger.debug(f"Performing vector search with {len(query_vector)}-dimensional query vector")
     
-    # 执行搜索并获取结果
+    # 执行搜索并获取结�?
     search_results, collection_info = self._perform_vector_search(
         query_vector, index_files, index_data, collection_info, 
         top_k, similarity_threshold, min_chars
     )
     
-    # 记录搜索时间和统计信息
+    # 记录搜索时间和统计信�?
     search_time = datetime.datetime.now() - search_start_time
     search_info["timing"]["vector_search"] = search_time.total_seconds()
     
@@ -209,18 +212,18 @@ def _execute_vector_search(self, query_vector: List[float], index_files: List[st
 
 def _process_document_metadata(self, search_info: Dict[str, Any], 
                               search_results: List[Dict[str, Any]]) -> Tuple[str, str]:
-    """处理文档元数据，确保有有效的文件名"""
+    """处理文档元数据，确保有有效的文件�?""
     document_filename = search_info.get("document_filename", "")
     document_id = search_info.get("document_id", "")
     self.logger.debug(f"Initial document_filename: {document_filename}, document_id: {document_id}")
     
-    # 如果没有文件名但有文档ID，尝试提取
+    # 如果没有文件名但有文档ID，尝试提�?
     if not document_filename and document_id:
         document_filename = self._extract_document_filename_from_sources(
             document_id, search_results, search_info
         )
     
-    # 美化文件名
+    # 美化文件�?
     document_filename = self._clean_document_filename(document_filename)
     
     # 确保文件名不为None
@@ -253,7 +256,7 @@ def _extract_document_filename_from_sources(self, document_id: str,
     return ""
 
 def _create_fallback_filename(self, document_id: str) -> str:
-    """从文档ID创建备用文件名"""
+    """从文档ID创建备用文件�?""
     # 使用文档ID的前30个字符，避免过长
     filename = document_id[:30]
     if len(document_id) > 30:
@@ -261,7 +264,7 @@ def _create_fallback_filename(self, document_id: str) -> str:
     return filename
 
 def _generate_result_identifiers(self) -> Tuple[str, str]:
-    """生成搜索结果标识符"""
+    """生成搜索结果标识�?""
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     search_id = str(uuid.uuid4())[:8]
     return search_id, timestamp
@@ -291,14 +294,14 @@ def _build_result_object(self, search_id: str, timestamp: str, query: str,
         "search_info": search_info
     }
     
-    # 添加便于访问的辅助字段
+    # 添加便于访问的辅助字�?
     result["search_info"]["document_filename"] = document_filename if len(index_files) == 1 else collection_display_name
     result["search_info"]["collection_display_name"] = collection_display_name
     
     return result
 
 def _save_and_log_results(self, result: Dict[str, Any], search_results: List[Dict[str, Any]]) -> None:
-    """保存搜索结果并记录日志"""
+    """保存搜索结果并记录日�?""
     # 保存搜索结果
     result_file = self._save_search_results(result, result["search_id"], result["timestamp"])
     result["result_file"] = result_file
@@ -309,3 +312,4 @@ def _save_and_log_results(self, result: Dict[str, Any], search_results: List[Dic
         self.logger.debug(f"Found {len(search_results)} results with similarities: {similarities}")
     else:
         self.logger.debug("No results found matching the criteria")
+

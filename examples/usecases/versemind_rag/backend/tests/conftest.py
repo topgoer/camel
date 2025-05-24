@@ -1,3 +1,6 @@
+# Copyright (c) 2025 VerseMind-RAG Contributors
+# Licensed under the MIT License
+
 """
 Global pytest configuration for the VerseMind-RAG test suite.
 This file contains fixtures that can be used by all tests.
@@ -104,3 +107,4 @@ def cleaner():
             cleaner.clean_document_files("abc123")
     """
     return TestFileCleanup()
+

@@ -1,3 +1,6 @@
+# Copyright (c) 2025 VerseMind-RAG Contributors
+# Licensed under the MIT License
+
 from fastapi import APIRouter, HTTPException, Body, Query
 from typing import Dict, Any, List, Optional
 import os
@@ -75,7 +78,7 @@ async def list_indices():
 
 @router.get("/paths")
 async def get_paths():
-    """获取系统使用的所有路径"""
+    """获取系统使用的所有路�?""
     # 获取基本目录
     storage_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
     
@@ -89,7 +92,7 @@ async def get_paths():
     embed_indices_dir = getattr(embed_service, "indices_dir", "Not available")
     embed_embeddings_dir = getattr(embed_service, "embeddings_dir", "Not available")
     
-    # 检查目录存在性
+    # 检查目录存在�?
     paths = {
         "storage_dir": storage_dir,
         "search_service": {
@@ -112,7 +115,7 @@ async def get_paths():
         "all_embeddings": []
     }
     
-    # 查找所有索引文件
+    # 查找所有索引文�?
     for dir_path in [search_indices_dir, search_alt_indices_dir, embed_indices_dir]:
         if os.path.exists(dir_path):
             for filename in os.listdir(dir_path):
@@ -122,7 +125,7 @@ async def get_paths():
                         "filename": filename,
                     })
     
-    # 查找所有嵌入文件
+    # 查找所有嵌入文�?
     for dir_path in [search_embeddings_dir, search_alt_embeddings_dir, embed_embeddings_dir]:
         if os.path.exists(dir_path):
             for filename in os.listdir(dir_path):
@@ -133,3 +136,4 @@ async def get_paths():
                     })
     
     return paths
+

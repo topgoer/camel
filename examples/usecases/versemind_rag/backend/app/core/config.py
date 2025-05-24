@@ -1,3 +1,6 @@
+# Copyright (c) 2025 VerseMind-RAG Contributors
+# Licensed under the MIT License
+
 # d:\\Github\\VerseMind-RAG\\backend\\app\\core\\config.py
 from pathlib import Path
 import toml
@@ -89,4 +92,5 @@ from app.core.logger import get_logger_with_env_level
 
 # Update the logger to use our environment-based logging utility
 logger = get_logger_with_env_level(__name__)
+
 

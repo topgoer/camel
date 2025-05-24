@@ -1,3 +1,6 @@
+# Copyright (c) 2025 VerseMind-RAG Contributors
+# Licensed under the MIT License
+
 """
 MCP API router for VerseMind-RAG.
 
@@ -159,3 +162,4 @@ def set_data(request: VerseMindDataRequest):
             "success": False,
             "error": str(e)
         }
+

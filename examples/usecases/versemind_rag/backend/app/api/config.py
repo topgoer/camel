@@ -1,3 +1,6 @@
+# Copyright (c) 2025 VerseMind-RAG Contributors
+# Licensed under the MIT License
+
 # backend/app/api/config.py
 
 from pathlib import Path
@@ -6,7 +9,7 @@ import toml
 
 router = APIRouter()
 
-# 明确项目根目录
+# 明确项目根目�?
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 
 def get_config_path() -> Path:
@@ -29,4 +32,5 @@ def get_config():
     except Exception as e:
         print(f"[API/config] Error loading config: {e}")
         raise HTTPException(status_code=500, detail=f"Config load error: {e}")
+
 

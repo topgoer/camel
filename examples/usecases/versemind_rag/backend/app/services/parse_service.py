@@ -1,3 +1,6 @@
+# Copyright (c) 2025 VerseMind-RAG Contributors
+# Licensed under the MIT License
+
 import os
 import json
 import datetime
@@ -12,7 +15,7 @@ from app.core.logger import get_logger_with_env_level
 logger = get_logger_with_env_level(__name__)
 
 class ParseService:
-    """文档解析服务，支持全文、分页、标题结构解析"""
+    """文档解析服务，支持全文、分页、标题结构解�?""
     
     def __init__(self):
         # Update directories according to the naming convention
@@ -37,7 +40,7 @@ class ParseService:
                        extract_tables: bool = False,
                        extract_images: bool = False) -> Dict[str, Any]:
         """
-        解析文档结构，支持直接传入 page_map
+        解析文档结构，支持直接传�?page_map
 
         参数:
             document_id: 文档ID
@@ -46,18 +49,16 @@ class ParseService:
             extract_tables: 是否提取表格
             extract_images: 是否提取图像
         返回:
-            包含解析结果的字典
-        """
+            包含解析结果的字�?        """
         self.logger.info(f"Starting parse_document for document_id: {document_id} with strategy: {strategy}") # Added log
-        # 检查文档是否存在
-        document_path = self._find_document(document_id)
+        # 检查文档是否存�?        document_path = self._find_document(document_id)
         if not document_path:
             self.logger.error(f"Document not found for ID: {document_id}") # Added log
-            raise FileNotFoundError(f"找不到ID为{document_id}的文档")
+            raise FileNotFoundError(f"找不到ID为{document_id}的文�?)
         
         self.logger.debug(f"Document path: {document_path}") # Added log
 
-        # 读取分块数据或使用 page_map
+        # 读取分块数据或使�?page_map
         if page_map is not None:
             self.logger.info("Using provided page_map for parsing.") # Added log
             chunk_data = {"chunks": [{"content": p["text"], "page": p.get("page"),
@@ -71,7 +72,7 @@ class ParseService:
             with open(chunk_file, "r", encoding="utf-8") as f:
                 chunk_data = json.load(f)
 
-        # 生成唯一ID和时间戳，准备 metadata
+        # 生成唯一ID和时间戳，准�?metadata
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         parse_id = str(uuid.uuid4())[:8]
         metadata = {
@@ -95,12 +96,11 @@ class ParseService:
             self.logger.error(f"Unsupported parsing strategy: {strategy}") # Added log
             raise ValueError(f"不支持的解析策略: {strategy}")
 
-        # 可选：提取表格或图像
-        self.logger.info(f"Extract tables: {extract_tables}, Extract images: {extract_images}") # Added log
+        # 可选：提取表格或图�?        self.logger.info(f"Extract tables: {extract_tables}, Extract images: {extract_images}") # Added log
         tables = self._extract_tables(document_path) if extract_tables else []
         images = self._extract_images(document_path) if extract_images else []
 
-        # 构建响应结构，包含 metadata 和 content
+        # 构建响应结构，包�?metadata �?content
         result = {
             "metadata": metadata,
             "content": parsed_content
@@ -110,8 +110,7 @@ class ParseService:
         if images:
             result["images"] = images
 
-        # 获取段落、表格和图像的统计数据
-        total_paragraphs = 0
+        # 获取段落、表格和图像的统计数�?        total_paragraphs = 0
         total_sections = 0
         
         # 计算段落和章节总数
@@ -151,7 +150,7 @@ class ParseService:
             "total_paragraphs": total_paragraphs,
             "total_tables": total_tables,
             "total_images": len(images),
-            "message": f"文档解析成功，已存储为 {result_file}",
+            "message": f"文档解析成功，已存储�?{result_file}",
             "parsed_content": self._get_sample_content(parsed_content, strategy)
         }
         return parsed_result
@@ -185,20 +184,16 @@ class ParseService:
                     # 添加部分段落
                     paragraphs = section.get("paragraphs", [])
                     for j, para in enumerate(paragraphs):
-                        if j >= 2:  # 每节最多2段
-                            break
+                        if j >= 2:  # 每节最�?�?                            break
                         sample.append({
                             "type": "paragraph",
                             "text": para.get("text", "")
                         })
                     
-                    # 添加部分子章节
-                    for k, subsection in enumerate(section.get("subsections", [])):
-                        if k >= 1:  # 每节最多1个子节
-                            break
+                    # 添加部分子章�?                    for k, subsection in enumerate(section.get("subsections", [])):
+                        if k >= 1:  # 每节最�?个子�?                            break
                         
-                        # 添加子章节标题
-                        sample.append({
+                        # 添加子章节标�?                        sample.append({
                             "type": "heading",
                             "level": subsection.get("level", 2),
                             "text": subsection.get("title", f"Subsection {i+1}.{k+1}")
@@ -207,8 +202,7 @@ class ParseService:
                         # 添加部分段落
                         sub_paragraphs = subsection.get("paragraphs", [])
                         for l, para in enumerate(sub_paragraphs):
-                            if l >= 1:  # 每子节最多1段
-                                break
+                            if l >= 1:  # 每子节最�?�?                                break
                             sample.append({
                                 "type": "paragraph",
                                 "text": para.get("text", "")
@@ -228,15 +222,13 @@ class ParseService:
                 elif item.get("type") == "table":
                     sample.append({
                         "type": "table",
-                        "text": "表格数据"  # 简化表格表示
-                    })
+                        "text": "表格数据"  # 简化表格表�?                    })
         
         return sample
 
     def list_parsed(self, document_id: str):
         """
-        列出指定文档的所有解析结果
-        """
+        列出指定文档的所有解析结�?        """
         self.logger.info(f"Listing parsed results for document_id: {document_id} in directory: {self.parsed_dir}") # Added log
         parsed_dir = self.parsed_dir
         os.makedirs(parsed_dir, exist_ok=True)
@@ -249,7 +241,7 @@ class ParseService:
         return results
 
     def _find_document(self, document_id: str) -> Optional[str]:
-        """查找指定ID的文档路径"""
+        """查找指定ID的文档路�?""
         self.logger.debug(f"Searching for document with ID: {document_id} in {self.documents_dir}") # Added log
         if os.path.exists(self.documents_dir):
             for filename in os.listdir(self.documents_dir):
@@ -270,7 +262,7 @@ class ParseService:
         return None
     
     def _find_chunk_file(self, document_id: str) -> Optional[str]:
-        """查找指定文档的分块文件"""
+        """查找指定文档的分块文�?""
         self.logger.debug(f"Searching for chunk file for document ID: {document_id} in {self.chunks_dir}") # Added log
         
         # Try to find the newest chunk file for this document
@@ -316,14 +308,11 @@ class ParseService:
     def _parse_full_text(self, chunk_data: Dict[str, Any]) -> Dict[str, Any]:
         """全文解析"""
         self.logger.debug("Parsing full text.") # Added log
-        # 从分块数据中提取所有文本
-        chunks = chunk_data.get("chunks", [])
+        # 从分块数据中提取所有文�?        chunks = chunk_data.get("chunks", [])
         
-        # 按照起始位置排序块
-        sorted_chunks = sorted(chunks, key=lambda x: x.get("start_pos", 0))
+        # 按照起始位置排序�?        sorted_chunks = sorted(chunks, key=lambda x: x.get("start_pos", 0))
         
-        # 提取文档标题（假设第一个块的第一行是标题）
-        title = ""
+        # 提取文档标题（假设第一个块的第一行是标题�?        title = ""
         if sorted_chunks:
             first_chunk = sorted_chunks[0]
             content = first_chunk.get("content", "")
@@ -337,8 +326,7 @@ class ParseService:
             content = chunk.get("content", "")
             paras = [p for p in content.split("\n") if p.strip()]
             
-            # 跳过第一个块的第一行（标题）
-            start_idx = 1 if i == 0 else 0
+            # 跳过第一个块的第一行（标题�?            start_idx = 1 if i == 0 else 0
             
             for j, para in enumerate(paras[start_idx:], start=start_idx):
                 paragraphs.append({
@@ -346,8 +334,7 @@ class ParseService:
                     "text": para
                 })
         
-        # 构建结构化内容
-        return {
+        # 构建结构化内�?        return {
             "title": title,
             "sections": [
                 {
@@ -360,21 +347,18 @@ class ParseService:
         }
     
     def _parse_by_page(self, chunk_data: Dict[str, Any]) -> Dict[str, Any]:
-        """按页面解析"""
+        """按页面解�?""
         self.logger.debug("Parsing by page.") # Added log
-        # 从分块数据中提取所有文本
-        chunks = chunk_data.get("chunks", [])
+        # 从分块数据中提取所有文�?        chunks = chunk_data.get("chunks", [])
         
-        # 按页面分组
-        pages = {}
+        # 按页面分�?        pages = {}
         for chunk in chunks:
             page_num = chunk.get("page", 1)
             if page_num not in pages:
                 pages[page_num] = []
             pages[page_num].append(chunk)
         
-        # 提取文档标题（假设第一页的第一个块的第一行是标题）
-        title = ""
+        # 提取文档标题（假设第一页的第一个块的第一行是标题�?        title = ""
         if 1 in pages and pages[1]:
             first_chunk = sorted(pages[1], key=lambda x: x.get("start_pos", 0))[0]
             content = first_chunk.get("content", "")
@@ -393,8 +377,7 @@ class ParseService:
                 content = chunk.get("content", "")
                 paras = [p for p in content.split("\n") if p.strip()]
                 
-                # 跳过第一页第一个块的第一行（标题）
-                start_idx = 1 if page_num == 1 and i == 0 else 0
+                # 跳过第一页第一个块的第一行（标题�?                start_idx = 1 if page_num == 1 and i == 0 else 0
                 
                 for j, para in enumerate(paras[start_idx:], start=start_idx):
                     paragraphs.append({
@@ -404,28 +387,24 @@ class ParseService:
             
             sections.append({
                 "id": f"section_{page_num}",
-                "title": f"第 {page_num} 页",
+                "title": f"�?{page_num} �?,
                 "level": 1,
                 "paragraphs": paragraphs
             })
         
-        # 构建结构化内容
-        return {
+        # 构建结构化内�?        return {
             "title": title,
             "sections": sections
         }
     
     def _parse_by_heading(self, chunk_data: Dict[str, Any]) -> Dict[str, Any]:
-        """按标题结构解析"""
+        """按标题结构解�?""
         self.logger.debug("Parsing by heading.") # Added log
-        # 从分块数据中提取所有文本
-        chunks = chunk_data.get("chunks", [])
+        # 从分块数据中提取所有文�?        chunks = chunk_data.get("chunks", [])
         
-        # 按照起始位置排序块
-        sorted_chunks = sorted(chunks, key=lambda x: x.get("start_pos", 0))
+        # 按照起始位置排序�?        sorted_chunks = sorted(chunks, key=lambda x: x.get("start_pos", 0))
         
-        # 提取文档标题（假设第一个块的第一行是标题）
-        title = ""
+        # 提取文档标题（假设第一个块的第一行是标题�?        title = ""
         if sorted_chunks:
             first_chunk = sorted_chunks[0]
             content = first_chunk.get("content", "")
@@ -433,8 +412,7 @@ class ParseService:
             if lines:
                 title = lines[0]
         
-        # 识别标题和内容
-        sections = []
+        # 识别标题和内�?        sections = []
         current_section = None
         current_subsection = None
         
@@ -447,14 +425,11 @@ class ParseService:
                 if not line:
                     continue
                 
-                # 检测是否为一级标题
-                if self._is_heading_level1(line):
-                    # 保存前一个章节
-                    if current_section:
+                # 检测是否为一级标�?                if self._is_heading_level1(line):
+                    # 保存前一个章�?                    if current_section:
                         sections.append(current_section)
                     
-                    # 创建新章节
-                    current_section = {
+                    # 创建新章�?                    current_section = {
                         "id": f"section_{len(sections)}",
                         "title": line,
                         "level": 1,
@@ -465,8 +440,7 @@ class ParseService:
                 
                 # 检测是否为二级标题
                 elif current_section and self._is_heading_level2(line):
-                    # 创建新的子章节
-                    current_subsection = {
+                    # 创建新的子章�?                    current_subsection = {
                         "id": f"section_{len(sections)}_{len(current_section['subsections'])}",
                         "title": line,
                         "level": 2,
@@ -474,8 +448,7 @@ class ParseService:
                     }
                     current_section["subsections"].append(current_subsection)
                 
-                # 普通段落
-                elif current_section:
+                # 普通段�?                elif current_section:
                     if current_subsection:
                         current_subsection["paragraphs"].append({
                             "id": f"p{len(sections)}_{len(current_section['subsections'])-1}_{len(current_subsection['paragraphs'])}",
@@ -487,19 +460,16 @@ class ParseService:
                             "text": line
                         })
         
-        # 添加最后一个章节
-        if current_section:
+        # 添加最后一个章�?        if current_section:
             sections.append(current_section)
         
-        # 如果没有识别到任何章节，创建一个默认章节
-        if not sections:
+        # 如果没有识别到任何章节，创建一个默认章�?        if not sections:
             paragraphs = []
             for i, chunk in enumerate(sorted_chunks):
                 content = chunk.get("content", "")
                 paras = [p for p in content.split("\n") if p.strip()]
                 
-                # 跳过第一个块的第一行（标题）
-                start_idx = 1 if i == 0 else 0
+                # 跳过第一个块的第一行（标题�?                start_idx = 1 if i == 0 else 0
                 
                 for j, para in enumerate(paras[start_idx:], start=start_idx):
                     paragraphs.append({
@@ -515,8 +485,7 @@ class ParseService:
                 "subsections": []
             })
         
-        # 构建结构化内容
-        return {
+        # 构建结构化内�?        return {
             "title": title,
             "sections": sections
         }
@@ -531,8 +500,7 @@ class ParseService:
             text = chunk.get("content", "")
             page = chunk.get("page")
             if '|' in text or '\t' in text:
-                # 简单表格拆分
-                rows = [row.strip().split('|') for row in text.splitlines() if '|' in row]
+                # 简单表格拆�?                rows = [row.strip().split('|') for row in text.splitlines() if '|' in row]
                 df = pd.DataFrame(rows)
                 parsed.append({"type": "table", "page": page, "content": df.to_dict(orient='records')})
             else:
@@ -540,37 +508,32 @@ class ParseService:
         return parsed
 
     def _is_heading_level1(self, text: str) -> bool:
-        """判断是否为一级标题"""
-        # 以#开头
-        if text.startswith("# "):
+        """判断是否为一级标�?""
+        # �?开�?        if text.startswith("# "):
             return True
         
         # 全大写且较短
         if text.isupper() and len(text) < 50:
             return True
         
-        # 数字开头的章节标题（如"1. 引言"）
-        if re.match(r"^\d+\.?\s+\w+", text) and len(text) < 50:
+        # 数字开头的章节标题（如"1. 引言"�?        if re.match(r"^\d+\.?\s+\w+", text) and len(text) < 50:
             return True
         
         return False
     
     def _is_heading_level2(self, text: str) -> bool:
-        """判断是否为二级标题"""
-        # 以##开头
-        if text.startswith("## "):
+        """判断是否为二级标�?""
+        # �?#开�?        if text.startswith("## "):
             return True
         
-        # 数字开头的小节标题（如"1.1 背景"）
-        if re.match(r"^\d+\.\d+\.?\s+\w+", text) and len(text) < 50:
+        # 数字开头的小节标题（如"1.1 背景"�?        if re.match(r"^\d+\.\d+\.?\s+\w+", text) and len(text) < 50:
             return True
         
         return False
     
     def _extract_tables(self, document_path: str) -> List[Dict[str, Any]]:
         """提取文档中的表格"""
-        # 这里是简化的实现，实际应根据文件类型使用不同的方法
-        self.logger.debug(f"Extracting tables from: {document_path}") # Added log
+        # 这里是简化的实现，实际应根据文件类型使用不同的方�?        self.logger.debug(f"Extracting tables from: {document_path}") # Added log
         file_ext = os.path.splitext(document_path)[1].lower()
         
         # 示例表格数据
@@ -581,9 +544,9 @@ class ParseService:
             tables.append({
                 "id": "table_1",
                 "section_id": "section_0",
-                "caption": "表1：示例表格",
+                "caption": "�?：示例表�?,
                 "data": [
-                    ["列1", "列2", "列3"],
+                    ["�?", "�?", "�?"],
                     ["数据1", "数据2", "数据3"],
                     ["数据4", "数据5", "数据6"]
                 ]
@@ -593,9 +556,9 @@ class ParseService:
             tables.append({
                 "id": "table_1",
                 "section_id": "section_0",
-                "caption": "表1：示例表格",
+                "caption": "�?：示例表�?,
                 "data": [
-                    ["列1", "列2", "列3"],
+                    ["�?", "�?", "�?"],
                     ["数据1", "数据2", "数据3"],
                     ["数据4", "数据5", "数据6"]
                 ]
@@ -605,8 +568,7 @@ class ParseService:
     
     def _extract_images(self, document_path: str) -> List[Dict[str, Any]]:
         """提取文档中的图像"""
-        # 这里是简化的实现，实际应根据文件类型使用不同的方法
-        self.logger.debug(f"Extracting images from: {document_path}") # Added log
+        # 这里是简化的实现，实际应根据文件类型使用不同的方�?        self.logger.debug(f"Extracting images from: {document_path}") # Added log
         file_ext = os.path.splitext(document_path)[1].lower()
         
         # 示例图像数据
@@ -617,7 +579,7 @@ class ParseService:
             images.append({
                 "id": "image_1",
                 "section_id": "section_0",
-                "caption": "图1：示例图像",
+                "caption": "�?：示例图�?,
                 "path": "/storage/images/placeholder.png"
             })
         elif file_ext == '.docx':
@@ -625,8 +587,9 @@ class ParseService:
             images.append({
                 "id": "image_1",
                 "section_id": "section_0",
-                "caption": "图1：示例图像",
+                "caption": "�?：示例图�?,
                 "path": "/storage/images/placeholder.png"
             })
         
         return images
+

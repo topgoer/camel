@@ -1,3 +1,6 @@
+# Copyright (c) 2025 VerseMind-RAG Contributors
+# Licensed under the MIT License
+
 import logging
 from fastapi import FastAPI, APIRouter, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
@@ -28,8 +31,7 @@ MCP_SERVER_PORT = int(os.getenv('MCP_SERVER_PORT', '3005'))
 MCP_SERVER_HOST = os.getenv('MCP_SERVER_HOST', '0.0.0.0')
 logging.info(f"MCP Server settings: enabled={ENABLE_MCP_SERVER}, port={MCP_SERVER_PORT}, host={MCP_SERVER_HOST}")
 
-# 创建一个将标准输出重定向到日志系统的处理程序
-class PrintToLogger:
+# 创建一个将标准输出重定向到日志系统的处理程�?class PrintToLogger:
     def __init__(self, logger, level):
         self.logger = logger
         self.level = level
@@ -43,12 +45,11 @@ class PrintToLogger:
     def flush(self):
         pass
 
-# 创建一个专门用于捕获 ChunkService 输出的日志器
+# 创建一个专门用于捕�?ChunkService 输出的日志器
 chunk_logger = logging.getLogger('ChunkService')
 chunk_logger.setLevel(logging.WARNING)  # 只显示警告和错误
 
-# 重定向标准输出，只捕获 ChunkService 相关的打印内容
-sys.stdout = PrintToLogger(chunk_logger, logging.DEBUG)
+# 重定向标准输出，只捕�?ChunkService 相关的打印内�?sys.stdout = PrintToLogger(chunk_logger, logging.DEBUG)
 
 # Set the global logging level to WARNING to suppress all INFO and DEBUG logs unless explicitly enabled
 logging.getLogger().setLevel(logging.WARNING)
@@ -75,8 +76,7 @@ app = FastAPI(
 
 @app.on_event("startup")
 async def startup_event():
-    # 如果配置启用了MCP服务器，则在后台启动它
-    if ENABLE_MCP_SERVER:
+    # 如果配置启用了MCP服务器，则在后台启动�?    if ENABLE_MCP_SERVER:
         try:
             from app.mcp import start_mcp_server
             logging.info("Starting MCP server...")
@@ -89,8 +89,7 @@ async def startup_event():
             logging.error(f"Error starting MCP server: {e}")
             import traceback
             logging.error(traceback.format_exc())
-    # 定义所有必要的目录路径 - 保持唯一性
-    required_dirs = [
+    # 定义所有必要的目录路径 - 保持唯一�?    required_dirs = [
         # 原始文档
         "storage/documents",
         # 数据处理流程目录
@@ -98,8 +97,7 @@ async def startup_event():
         "backend/02-chunked-docs", 
         "backend/03-parsed-docs",
         "backend/04-embedded-docs",
-        # 索引与结果存储
-        "backend/storage/indices",
+        # 索引与结果存�?        "backend/storage/indices",
         "backend/storage/results"
     ]
     
@@ -122,8 +120,7 @@ async def startup_event():
 # 配置CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 在生产环境中应该限制为特定域名
-    allow_credentials=True,
+    allow_origins=["*"],  # 在生产环境中应该限制为特定域�?    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -131,8 +128,7 @@ app.add_middleware(
 # 创建API路由
 api_router = APIRouter()
 
-# 添加各模块路由
-api_router.include_router(documents.router, prefix="/documents", tags=["documents"])
+# 添加各模块路�?api_router.include_router(documents.router, prefix="/documents", tags=["documents"])
 api_router.include_router(chunks.router, prefix="/chunks", tags=["chunks"])
 api_router.include_router(parse.router, prefix="/parse", tags=["parse"])
 api_router.include_router(embeddings.router, prefix="/embeddings", tags=["embeddings"])
@@ -155,7 +151,7 @@ app.include_router(search.router, prefix="/api/search")
 
 @app.on_event("shutdown")
 async def shutdown_event():
-    """清理资源并关闭MCP服务器."""
+    """清理资源并关闭MCP服务�?"""
     if ENABLE_MCP_SERVER:
         try:
             from app.mcp import stop_mcp_server
@@ -170,12 +166,12 @@ async def shutdown_event():
             import traceback
             logging.error(traceback.format_exc())
 
-# 根路由
-@app.get("/")
+# 根路�?@app.get("/")
 async def root():
     return {
         "message": "欢迎使用VerseMind-RAG API",
         "version": "0.1.0",
-        "status": "运行中",
+        "status": "运行�?,
         "docs_url": "/docs"
     }
+

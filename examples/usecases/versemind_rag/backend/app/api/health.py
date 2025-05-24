@@ -1,3 +1,6 @@
+# Copyright (c) 2025 VerseMind-RAG Contributors
+# Licensed under the MIT License
+
 from fastapi import APIRouter
 import os
 
@@ -29,3 +32,4 @@ async def health_check():
         "indices_details": indices_details,
         "api_version": "0.2.0"
     }
+

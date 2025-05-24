@@ -1,3 +1,6 @@
+# Copyright (c) 2025 VerseMind-RAG Contributors
+# Licensed under the MIT License
+
 from fastapi import APIRouter, HTTPException, Body, Depends, Query
 from typing import Dict, List, Optional
 import os
@@ -23,10 +26,7 @@ async def create_index(
     
     - document_id: 文档ID（必填）
     - embedding_id: 嵌入ID（必填）
-    - vector_db: 向量数据库类型，默认使用配置中的值
-    - collection_name: 集合名称，默认自动生成
-    - index_name: 索引名称，默认自动生成
-    - version: 索引版本，默认为"1.0"
+    - vector_db: 向量数据库类型，默认使用配置中的�?    - collection_name: 集合名称，默认自动生�?    - index_name: 索引名称，默认自动生�?    - version: 索引版本，默认为"1.0"
     """
     print(f"[API LOG /api/index/create] Received: document_id='{document_id}', vector_db='{vector_db}', collection_name='{collection_name}', index_name='{index_name}', embedding_id='{embedding_id}', version='{version}'")
     try:
@@ -79,8 +79,7 @@ async def update_index(
 @router.delete("/{index_id}")
 async def delete_index(index_id: str):
     """
-    删除指定的索引
-    """
+    删除指定的索�?    """
     try:
         result = index_service.delete_index(index_id)
         return result
@@ -88,3 +87,4 @@ async def delete_index(index_id: str):
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"索引删除失败: {str(e)}")
+
