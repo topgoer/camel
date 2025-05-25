@@ -24,7 +24,7 @@ async def generate_text(
     """
     基于检索结果生成文本，可选择包含图片数据
     """
-    # 只用 config，不�?max_tokens 给服务层
+    # 只用 config，不?max_tokens 给服务层
     try:
         result = generate_service.generate_text(search_id, prompt, provider, model, temperature, image_data=image_data)
         return result
@@ -53,14 +53,14 @@ async def generate_from_search(
     参数:
         search_id: 搜索结果ID
         prompt: 生成提示
-        provider: 模型提供�?        model: 模型名称
+        provider: 模型提供?        model: 模型名称
         temperature: 温度参数
         max_tokens: 最大生成令牌数
-        top_p: 采样阈�?        stream: 是否流式返回
+        top_p: 采样阈?        stream: 是否流式返回
         image_data: 可选的base64编码图片数据
     """
     try:
-        # 使用与generate_text相同的服务方法，但确保search_id不为�?        if not search_id:
+        # 使用与generate_text相同的服务方法，但确保search_id不为?        if not search_id:
             raise ValueError("搜索结果ID不能为空")
             
         result = generate_service.generate_text(search_id, prompt, provider, model, temperature, image_data=image_data)
@@ -75,6 +75,6 @@ async def generate_from_search(
 @router.get("/models")
 async def get_generation_models():
     """
-    获取可用的生成模型列�?    """
+    获取可用的生成模型列?    """
     return generate_service.get_generation_models()
-
+

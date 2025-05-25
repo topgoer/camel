@@ -17,12 +17,12 @@ async def upload_document(
     description: Optional[str] = Form(None)
 ):
     """
-    上传文档文件（PDF、DOCX、TXT、Markdown�?    """
-    # 检查文件类�?    allowed_extensions = [".pdf", ".docx", ".txt", ".md"]
+    上传文档文件（PDF、DOCX、TXT、Markdown?    """
+    # 检查文件类?    allowed_extensions = [".pdf", ".docx", ".txt", ".md"]
     file_ext = os.path.splitext(file.filename)[1].lower()
     
     if file_ext not in allowed_extensions:
-        raise HTTPException(status_code=400, detail="不支持的文件类型。请上传PDF、DOCX、TXT或Markdown文件�?)
+        raise HTTPException(status_code=400, detail="不支持的文件类型。请上传PDF、DOCX、TXT或Markdown文件?)
     
     # 使用服务处理文件上传
     result = await load_service.load_document(file, description)
@@ -31,16 +31,16 @@ async def upload_document(
 @router.get("/list")
 async def list_documents():
     """
-    获取已上传文档列�?    """
+    获取已上传文档列?    """
     return load_service.get_document_list()
 
 @router.get("/{document_id}")
 async def get_document(document_id: str):
     """
-    获取指定文档的详细信�?    """
+    获取指定文档的详细信?    """
     document = load_service.get_document_by_id(document_id)
     if not document:
-        raise HTTPException(status_code=404, detail=f"找不到ID为{document_id}的文�?)
+        raise HTTPException(status_code=404, detail=f"找不到ID为{document_id}的文?)
     return document
 
 @router.delete("/{document_id}")
@@ -50,6 +50,6 @@ async def delete_document(document_id: str):
     """
     success = load_service.delete_document(document_id)
     if not success:
-        raise HTTPException(status_code=404, detail=f"找不到ID为{document_id}的文�?)
-    return {"message": f"文档 {document_id} 已成功删�?}
-
+        raise HTTPException(status_code=404, detail=f"找不到ID为{document_id}的文?)
+    return {"message": f"文档 {document_id} 已成功删?}
+

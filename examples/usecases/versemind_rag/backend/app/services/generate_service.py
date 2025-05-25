@@ -28,7 +28,7 @@ class GenerateService:
     """文本生成服务，支持基于检索结果的生成"""
     
     def __init__(self, results_dir=os.path.join("storage", "results")):
-        # 使用绝对路径，与SearchService保持一�?        self.storage_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
+        # 使用绝对路径，与SearchService保持一?        self.storage_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
         self.results_dir = os.path.join(self.storage_dir, results_dir)
         os.makedirs(self.results_dir, exist_ok=True)
         # 添加日志
@@ -37,18 +37,18 @@ class GenerateService:
         self.deepseek_api_key = os.environ.get("DEEPSEEK_API_KEY")
         self.deepseek_api_base = os.environ.get("DEEPSEEK_API_BASE", "https://api.deepseek.com/v1")
         self.ollama_base_url = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434")
-        # 只读取一�?config.toml，使�?config.py �?get_config_path
+        # 只读取一?config.toml，使?config.py ?get_config_path
         config_path = get_config_path()
         with open(config_path, "r", encoding="utf-8") as f:
             self.config = toml.load(f)
             
     def _check_supports_vision(self, model: str) -> bool:
-        """检查模型是否支持视觉功能（根据config.toml中的配置�?""
+        """检查模型是否支持视觉功能（根据config.toml中的配置?""
         print(f"[DEBUG] Checking vision support for model: {model}")
         return self._get_model_config_property(model, "supports_vision", False)
 
     def _get_model_config_property(self, model: str, property_name: str, default_value: Any = None) -> Any:
-        """从配置中获取指定模型的特定属性�?""
+        """从配置中获取指定模型的特定属性?""
         model_config = self._find_model_config(model)
         if model_config:
             return model_config.get(property_name, default_value)
@@ -56,7 +56,7 @@ class GenerateService:
         return default_value
 
     def _find_model_config(self, model: str) -> Optional[Dict[str, Any]]:
-        """查找指定模型的配置信�?""
+        """查找指定模型的配置信?""
         for section_key, section_cfg in self.config.items():
             if not section_key.startswith('llm.'):
                 continue
@@ -82,7 +82,7 @@ class GenerateService:
         llm_config = self.config.get("llm", {})
         normalized_model_name = self._normalize_model_name(model_name)
         
-        # 优先查找所�?[llm.xxx] 区块
+        # 优先查找所?[llm.xxx] 区块
         for section_cfg in llm_config.values():
             if not isinstance(section_cfg, dict):
                 continue
@@ -98,37 +98,37 @@ class GenerateService:
             if "max_tokens" in llm_config:
                 return int(llm_config["max_tokens"])
         
-        # fallback: 取全局 [llm] �?max_tokens
+        # fallback: 取全局 [llm] ?max_tokens
         if isinstance(llm_config, dict) and "max_tokens" in llm_config:
             return int(llm_config["max_tokens"])
         
-        # 最后兜�?1024
+        # 最后兜?1024
         return 1024
 
     def generate_text(self, search_id: Optional[str], prompt: str, provider: str, model: str, 
                      temperature: float = 0.7, max_tokens: Optional[int] = None, image_data: Optional[str] = None) -> Dict[str, Any]:
         """
-        基于检索结果生成文�?        
+        基于检索结果生成文?        
         参数:
             search_id: 搜索结果ID（可选）
             prompt: 提示文本
-            provider: 提供�?("ollama", "openai", "deepseek")
+            provider: 提供?("ollama", "openai", "deepseek")
             model: 模型名称
             temperature: 温度参数
             max_tokens: 最大生成令牌数
             image_data: base64编码的图片数据（可选）
         
         返回:
-            包含生成结果的字�?        """
+            包含生成结果的字?        """
         # 获取搜索结果和上下文
         search_data, search_results = self._get_search_results(search_id)
         context = self._build_context(search_results, search_id, search_data)
         
-        # 构建完整提示并生成文�?        full_prompt = context + prompt if context else prompt
+        # 构建完整提示并生成文?        full_prompt = context + prompt if context else prompt
         effective_max_tokens = self._get_effective_max_tokens(model, max_tokens)
         generated_text = self._generate_text_with_model(full_prompt, provider, model, temperature, effective_max_tokens, image_data)
         
-        # 创建结果并保�?        result = self._create_generation_result(prompt, provider, model, temperature, effective_max_tokens, search_id, generated_text)
+        # 创建结果并保?        result = self._create_generation_result(prompt, provider, model, temperature, effective_max_tokens, search_id, generated_text)
         self._save_generation_result(result)
         
         # 更新VerseMind数据（如果可用）
@@ -147,7 +147,7 @@ class GenerateService:
             
         search_file = self._find_search_file(search_id)
         if not search_file:
-            raise FileNotFoundError(f"找不到ID为{search_id}的搜索结�?)
+            raise FileNotFoundError(f"找不到ID为{search_id}的搜索结?)
         
         try:
             with open(search_file, "r", encoding="utf-8") as f:
@@ -167,19 +167,19 @@ class GenerateService:
         return search_data, search_results
         
     def _build_context(self, search_results: list, search_id: Optional[str], search_data: Optional[dict]) -> str:
-        """构建生成上下�?""
+        """构建生成上下?""
         context = ""
         if search_results:
             context = "基于以下检索结果：\n\n"
             for i, result in enumerate(search_results):
                 context += f"[{i+1}] {result.get('text', '')}\n\n"
         elif search_id and search_data:
-            # 如果有search_id但没有搜索结果，添加有关文档的信�?            document_id = search_data.get("document_id", "")
+            # 如果有search_id但没有搜索结果，添加有关文档的信?            document_id = search_data.get("document_id", "")
             document_filename = search_data.get("document_filename", "")
             query = search_data.get("query", "")
             similarity_threshold = search_data.get("similarity_threshold", 0.5)
             
-            context = f"查询未找到达到相似度阈�?({similarity_threshold}) 的结果。\n"
+            context = f"查询未找到达到相似度阈?({similarity_threshold}) 的结果。\n"
             if document_filename:
                 context += f"已搜索的文档: {document_filename}\n"
             elif document_id:
@@ -215,7 +215,7 @@ class GenerateService:
         return result
     
     def _save_generation_result(self, result: Dict[str, Any]) -> None:
-        """保存生成结果到文�?""
+        """保存生成结果到文?""
         result_path = os.path.join(self.results_dir, result["result_file"])
         
         with open(result_path, "w", encoding="utf-8") as f:
@@ -229,7 +229,7 @@ class GenerateService:
             if len(title) > 100:
                 title = title[:97] + "..."
             
-            # 为MCP服务创建包含上下文和搜索结果的完整参�?            complete_reference = self._build_mcp_reference(prompt, generated_text, context, search_id, search_data)
+            # 为MCP服务创建包含上下文和搜索结果的完整参?            complete_reference = self._build_mcp_reference(prompt, generated_text, context, search_id, search_data)
             
             # 调用MCP服务更新数据
             set_versemind_data(title=title, reference=complete_reference)
@@ -238,16 +238,16 @@ class GenerateService:
             logger.error(f"Failed to update VerseMind data: {str(e)}")
     
     def _build_mcp_reference(self, prompt: str, generated_text: str, context: str, search_id: Optional[str], search_data: Optional[dict]) -> str:
-        """构建MCP服务的参考信�?""
+        """构建MCP服务的参考信?""
         complete_reference = ""
         
-        # 添加文档元数据信�?如果�?
+        # 添加文档元数据信?如果?
         if search_id and search_data:
             doc_info = self._get_document_info(search_data)
             if doc_info:
                 complete_reference += f"## 背景信息\n{' | '.join(doc_info)}\n\n"
         
-        # 添加上下�?        if context:
+        # 添加上下?        if context:
             complete_reference += f"## 检索上下文\n{context}\n\n"
         
         # 添加原始提示和生成的回复
@@ -270,7 +270,7 @@ class GenerateService:
         return {"model_groups": self.config.get("model_groups", {})}
     
     def _find_search_file(self, search_id: str) -> Optional[str]:
-        """查找指定ID的搜索结果文�?""
+        """查找指定ID的搜索结果文?""
         logger.debug(f"Searching for search result with ID '{search_id}' in directory: {self.results_dir}")
         
         if os.path.exists(self.results_dir):
@@ -299,7 +299,7 @@ class GenerateService:
         elif provider == "siliconflow":
             return self._generate_with_deepseek(prompt, model, temperature, max_tokens, image_data)            
         else:
-            raise ValueError(f"不支持的提供�? {provider}")
+            raise ValueError(f"不支持的提供? {provider}")
     
     def _generate_with_ollama(self, prompt: str, model: str, temperature: float, max_tokens: int, image_data: Optional[str] = None) -> str:
         """使用Ollama生成文本，可选择包含图片数据"""
@@ -315,12 +315,12 @@ class GenerateService:
                 }
             }
             
-            # 从config.toml检查是否支持视�?            supports_vision = self._check_supports_vision(model)
+            # 从config.toml检查是否支持视?            supports_vision = self._check_supports_vision(model)
             
             # 如果有图片且模型支持视觉功能
             if image_data and supports_vision:
                 print(f"[DEBUG] Adding image data to Ollama request for model {model}")
-                # 添加图片数据到请�?                payload["images"] = [f"data:image/jpeg;base64,{image_data}"]
+                # 添加图片数据到请?                payload["images"] = [f"data:image/jpeg;base64,{image_data}"]
             
             response = requests.post(
                 f"{self.ollama_base_url}/api/generate",
@@ -349,12 +349,12 @@ class GenerateService:
             client = openai.OpenAI(api_key=self.openai_api_key)
             
             messages = [
-                {"role": "system", "content": "你是一个有用的AI助手。基于提供的信息回答问题�?}
+                {"role": "system", "content": "你是一个有用的AI助手。基于提供的信息回答问题?}
             ]
             
-            # 从config.toml检查是否支持视�?            supports_vision = self._check_supports_vision(model)
+            # 从config.toml检查是否支持视?            supports_vision = self._check_supports_vision(model)
             
-            # 如果有图片且模型支持视觉功能，则构建包含图片的消�?            if image_data and supports_vision:
+            # 如果有图片且模型支持视觉功能，则构建包含图片的消?            if image_data and supports_vision:
                 # 构建包含文本和图片的内容
                 user_message = {
                     "role": "user",
@@ -373,7 +373,7 @@ class GenerateService:
                 
                 messages.append(user_message)
             else:
-                # 没有图片或者模型不支持视觉，使用普通文本消�?                messages.append({"role": "user", "content": prompt})
+                # 没有图片或者模型不支持视觉，使用普通文本消?                messages.append({"role": "user", "content": prompt})
             
             response = client.chat.completions.create(
                 model=model,
@@ -397,21 +397,21 @@ class GenerateService:
             # 使用OpenAI风格的客户端访问DeepSeek API
             from openai import OpenAI
             
-            # 确定正确的模型名�?            if "deepseek-chat" in model or "deepseek-v3" in model:
+            # 确定正确的模型名?            if "deepseek-chat" in model or "deepseek-v3" in model:
                 model_name = "deepseek-chat"
             elif "deepseek-reasoner" in model or "deepseek-r1" in model:
                 model_name = "deepseek-reasoner"
             else:
                 model_name = model
             
-            # 从config.toml检查是否支持视�?            supports_vision = self._check_supports_vision(model)
+            # 从config.toml检查是否支持视?            supports_vision = self._check_supports_vision(model)
             
-            # 创建客户端连�?            client = OpenAI(
+            # 创建客户端连?            client = OpenAI(
                 api_key=self.deepseek_api_key,
                 base_url=self.deepseek_api_base
             )
             
-            # 如果有图片且模型支持视觉功能，则构建包含图片的消�?            if image_data and supports_vision:
+            # 如果有图片且模型支持视觉功能，则构建包含图片的消?            if image_data and supports_vision:
                 # 构建包含文本和图片的内容
                 messages = [{
                     "role": "user",
@@ -426,7 +426,7 @@ class GenerateService:
                     ]
                 }]
             else:
-                # 没有图片或模型不支持视觉，使用普通文本消�?                messages = [{"role": "user", "content": prompt}]
+                # 没有图片或模型不支持视觉，使用普通文本消?                messages = [{"role": "user", "content": prompt}]
                 
             # 调用API生成文本
             response = client.chat.completions.create(
@@ -451,7 +451,7 @@ class GenerateService:
         参数:
             search_id: 搜索结果ID（可选）
             prompt: 提示文本
-            provider: 提供�?("ollama", "openai", "deepseek")
+            provider: 提供?("ollama", "openai", "deepseek")
             model: 模型名称
             temperature: 温度参数
             max_tokens: 最大生成令牌数
@@ -460,7 +460,7 @@ class GenerateService:
         返回:
             生成的文本流
         """
-        # 获取和处理搜索结�?        search_data, search_results = await self._get_stream_search_results(search_id)
+        # 获取和处理搜索结?        search_data, search_results = await self._get_stream_search_results(search_id)
         
         # 构建提示上下文和完整提示
         context = self._build_context(search_results, search_id, search_data)
@@ -470,11 +470,11 @@ class GenerateService:
         if max_tokens is None:
             max_tokens = self._get_max_tokens_from_config(model)
             
-        # 根据提供商流式生成文�?        async for chunk in self._stream_with_provider(provider, full_prompt, model, temperature, max_tokens, image_data):
+        # 根据提供商流式生成文?        async for chunk in self._stream_with_provider(provider, full_prompt, model, temperature, max_tokens, image_data):
             yield chunk
             
     async def _get_stream_search_results(self, search_id: Optional[str]) -> tuple[Optional[dict], list]:
-        """获取流式生成的搜索结果数�?""
+        """获取流式生成的搜索结果数?""
         search_results = []
         search_data = None
         
@@ -483,7 +483,7 @@ class GenerateService:
             
         search_file = self._find_search_file(search_id)
         if not search_file:
-            raise FileNotFoundError(f"找不到ID为{search_id}的搜索结�?)
+            raise FileNotFoundError(f"找不到ID为{search_id}的搜索结?)
         
         try:
             with open(search_file, "r", encoding="utf-8") as f:
@@ -492,7 +492,7 @@ class GenerateService:
                 
             logger.debug(f"Loaded search results for streaming from {search_file}: found {len(search_results)} results")
             
-            # 检查搜索结果是否为�?            if not search_results:
+            # 检查搜索结果是否为?            if not search_results:
                 query = search_data.get("query", "")
                 document_filename = search_data.get("document_filename", "")
                 logger.warning(f"Stream: Search ID {search_id} has no results. Query: '{query}', Document: '{document_filename}'")
@@ -514,7 +514,7 @@ class GenerateService:
             async for text_chunk in self._stream_with_ollama(prompt, model, temperature, max_tokens, image_data):
                 yield text_chunk
         else:
-            raise ValueError(f"不支持的提供�? {provider}")
+            raise ValueError(f"不支持的提供? {provider}")
     
     async def _stream_with_deepseek(self, prompt: str, model: str, temperature: float, max_tokens: int, image_data: Optional[str] = None):
         """使用DeepSeek流式生成文本，可选择包含图片数据"""
@@ -524,21 +524,21 @@ class GenerateService:
         try:
             from openai import OpenAI
             
-            # 确定正确的模型名�?            if "deepseek-chat" in model or "deepseek-v3" in model:
+            # 确定正确的模型名?            if "deepseek-chat" in model or "deepseek-v3" in model:
                 model_name = "deepseek-chat"
             elif "deepseek-reasoner" in model or "deepseek-r1" in model:
                 model_name = "deepseek-reasoner"
             else:
                 model_name = model
             
-            # 从config.toml检查是否支持视�?            supports_vision = self._check_supports_vision(model)
+            # 从config.toml检查是否支持视?            supports_vision = self._check_supports_vision(model)
             
-            # 创建客户端连�?            client = OpenAI(
+            # 创建客户端连?            client = OpenAI(
                 api_key=self.deepseek_api_key,
                 base_url=self.deepseek_api_base
             )
             
-            # 如果有图片且模型支持视觉功能，则构建包含图片的消�?            if image_data and supports_vision:
+            # 如果有图片且模型支持视觉功能，则构建包含图片的消?            if image_data and supports_vision:
                 # 构建包含文本和图片的内容
                 messages = [{
                     "role": "user",
@@ -553,7 +553,7 @@ class GenerateService:
                     ]
                 }]
             else:
-                # 没有图片或模型不支持视觉，使用普通文本消�?                messages = [{"role": "user", "content": prompt}]
+                # 没有图片或模型不支持视觉，使用普通文本消?                messages = [{"role": "user", "content": prompt}]
             
             # 调用API流式生成文本
             response = client.chat.completions.create(
@@ -582,12 +582,12 @@ class GenerateService:
             client = openai.OpenAI(api_key=self.openai_api_key)
             
             messages = [
-                {"role": "system", "content": "你是一个有用的AI助手。基于提供的信息回答问题�?}
+                {"role": "system", "content": "你是一个有用的AI助手。基于提供的信息回答问题?}
             ]
             
-            # 从config.toml检查是否支持视�?            supports_vision = self._check_supports_vision(model)
+            # 从config.toml检查是否支持视?            supports_vision = self._check_supports_vision(model)
             
-            # 如果有图片且模型支持视觉功能，则构建包含图片的消�?            if image_data and supports_vision:
+            # 如果有图片且模型支持视觉功能，则构建包含图片的消?            if image_data and supports_vision:
                 # 构建包含文本和图片的内容
                 user_message = {
                     "role": "user",
@@ -606,7 +606,7 @@ class GenerateService:
                 
                 messages.append(user_message)
             else:
-                # 没有图片或者模型不支持视觉，使用普通文本消�?                messages.append({"role": "user", "content": prompt})
+                # 没有图片或者模型不支持视觉，使用普通文本消?                messages.append({"role": "user", "content": prompt})
             
             response = client.chat.completions.create(
                 model=model,
@@ -625,7 +625,7 @@ class GenerateService:
             yield f"错误: {str(e)}"
     
     async def _stream_with_ollama(self, prompt: str, model: str, temperature: float, max_tokens: int, image_data: Optional[str] = None):
-        """使用Ollama流式生成文本，支持图片数�?""
+        """使用Ollama流式生成文本，支持图片数?""
         try:
             payload = self._prepare_ollama_payload(model, prompt, temperature, max_tokens, image_data, stream=True)
             async for chunk in self._fetch_ollama_stream(payload):
@@ -647,12 +647,12 @@ class GenerateService:
             }
         }
         
-        # 从config.toml检查是否支持视�?        supports_vision = self._check_supports_vision(model)
+        # 从config.toml检查是否支持视?        supports_vision = self._check_supports_vision(model)
         
         # 如果有图片且模型支持视觉功能
         if image_data and supports_vision:
             print(f"[DEBUG] Adding image data to Ollama request for model {model}")
-            # 添加图片数据到请�?            payload["images"] = [f"data:image/jpeg;base64,{image_data}"]
+            # 添加图片数据到请?            payload["images"] = [f"data:image/jpeg;base64,{image_data}"]
             
         return payload
     
@@ -685,4 +685,4 @@ class GenerateService:
                 yield data["response"]
         except json.JSONDecodeError:
             logger.error(f"无法解析JSON: {line}")
-
+
