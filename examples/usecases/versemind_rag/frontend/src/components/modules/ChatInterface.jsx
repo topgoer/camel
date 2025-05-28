@@ -483,7 +483,7 @@ function ChatInterface({
             </div>
           </label>          <div className="relative" ref={dropdownRef}>
             <div
-              className={`min-w-[180px] px-2 py-1 pr-16 border rounded-md flex items-center cursor-pointer ${
+              className={`min-w-[320px] px-2 py-1 pr-16 border rounded-md flex items-center cursor-pointer ${
                 (() => {
                   if (!selectedIndex) return 'border-gray-300';
                   const isIndexId = indices && Array.isArray(indices) && indices.some(idx => idx.index_id === selectedIndex);
@@ -491,8 +491,10 @@ function ChatInterface({
                 })()
               }`}
               onClick={() => !configLoading && !loading && setIsDropdownOpen(prev => !prev)}
-            >{selectedIndex ? (                <div 
-                  className="text-sm overflow-hidden text-ellipsis whitespace-normal max-w-[450px]" 
+            >
+              {selectedIndex ? (
+                <div 
+                  className="text-sm overflow-hidden text-ellipsis whitespace-normal max-w-[700px]" 
                   title={getDocumentFilenameByIndexId(selectedIndex)}
                   style={{
                     wordBreak: 'break-word',
@@ -529,7 +531,7 @@ function ChatInterface({
             {/* Custom dropdown menu */}
             {isDropdownOpen && (
               <div 
-                className="absolute mt-1 w-full min-w-[180px] max-w-4xl bg-white border border-gray-300 rounded-md shadow-lg z-50 max-h-[400px] overflow-y-auto"
+                className="absolute mt-1 w-full min-w-[320px] max-w-3xl bg-white border border-gray-300 rounded-md shadow-lg z-50 max-h-[400px] overflow-y-auto"
                 style={{ overflowX: 'hidden' }}
               >
                 {/* Clear selection option */}

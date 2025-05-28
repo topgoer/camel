@@ -1,6 +1,3 @@
-# Copyright (c) 2025 VerseMind-RAG Contributors
-# Licensed under the MIT License
-
 from fastapi import APIRouter, HTTPException, Body
 from typing import Dict, List, Any, Optional
 import os
@@ -65,7 +62,8 @@ async def parse_document(
 @router.get("/list")
 async def list_parsed(document_id: str):
     """
-    获取指定文档的所有解析结?    """
+    获取指定文档的所有解析结果
+    """
     try:
         results = parse_service.list_parsed(document_id)
         return results
@@ -75,14 +73,14 @@ async def list_parsed(document_id: str):
 @router.get("/{document_id}")
 async def get_parsed_document(document_id: str):
     """
-    获取指定文档的最新解析结?    """
+    获取指定文档的最新解析结果
+    """
     try:
         results = parse_service.list_parsed(document_id)
         # Return the most recent parsing result if available
         if results and len(results) > 0:
             return results[0]
         else:
-            raise HTTPException(status_code=404, detail=f"没有找到文档ID为{document_id}的解析结?)
+            raise HTTPException(status_code=404, detail=f"没有找到文档ID为{document_id}的解析结果")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"获取解析结果失败: {str(e)}")
-
